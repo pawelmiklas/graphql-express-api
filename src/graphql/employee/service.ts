@@ -4,6 +4,8 @@ import { Prisma } from '@prisma/client'
 import { PrismaSelect } from '@paljs/plugins'
 import {
   EmployeeInput,
+  PaginatedEmployee,
+  Pagination,
   QueryEmployeesArgs,
   ResolversTypes,
   SortOrder,
@@ -14,13 +16,19 @@ export const getEmployees = async ({
   info,
   orderBy,
   where,
+  limit = 10,
+  page = 1,
 }: {
   orderBy: QueryEmployeesArgs['orderBy']
   where: QueryEmployeesArgs['where']
   info: GraphQLResolveInfo
+  limit: Pagination['limit']
+  page: Pagination['page']
 }) => {
-  const { select } = new PrismaSelect(info).value as {
-    select: Prisma.EmployeeFindManyArgs['select']
+  const {
+    select: { data },
+  } = new PrismaSelect(info).value as {
+    select: { data: { select: Prisma.EmployeeFindManyArgs['select'] } }
   }
 
   const orderByParams = (orderBy ?? [])
@@ -33,20 +41,34 @@ export const getEmployees = async ({
     })
     .filter((element): element is Record<SortableField, SortOrder> => element !== null)
 
-  const employees = await db.employee.findMany({
-    where: {
-      title: where?.title ? { contains: where.title } : undefined,
-      departmentId: where?.departmentId ? { equals: where.departmentId } : undefined,
-      salary: {
-        gte: where?.salary?.min ?? undefined,
-        lte: where?.salary?.max ?? undefined,
-      },
+  const whereArgs: Prisma.EmployeeFindManyArgs['where'] = {
+    title: where?.title ? { contains: where.title } : undefined,
+    departmentId: where?.departmentId ? { equals: where.departmentId } : undefined,
+    salary: {
+      gte: where?.salary?.min ?? undefined,
+      lte: where?.salary?.max ?? undefined,
     },
-    orderBy: orderByParams,
-    select: { ...select },
-  })
+  }
 
-  return employees as unknown as ResolversTypes['Employee'][]
+  const [employees, count] = await db.$transaction([
+    db.employee.findMany({
+      where: { ...whereArgs },
+      orderBy: orderByParams.length > 0 ? orderByParams : undefined,
+      select: { ...data.select },
+      take: limit,
+      skip: (page - 1) * limit,
+    }),
+    db.employee.count({ where: { ...whereArgs } }),
+  ])
+
+  return {
+    data: employees as unknown as PaginatedEmployee['data'],
+    pagination: {
+      limit: limit,
+      page: page ?? 1,
+      totalPages: Math.ceil(count / limit),
+    },
+  }
 }
 
 export const getEmployeeById = async ({ info, id }: { info: GraphQLResolveInfo; id: string }) => {

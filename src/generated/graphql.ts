@@ -83,10 +83,23 @@ export type OrderByInput = {
   order: SortOrder;
 };
 
+export type PaginatedEmployee = {
+  __typename?: 'PaginatedEmployee';
+  data: Array<Employee>;
+  pagination: Pagination;
+};
+
+export type Pagination = {
+  __typename?: 'Pagination';
+  limit: Scalars['Int']['output'];
+  page: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   employee?: Maybe<Employee>;
-  employees?: Maybe<Array<Employee>>;
+  employees: PaginatedEmployee;
 };
 
 
@@ -96,7 +109,9 @@ export type QueryEmployeeArgs = {
 
 
 export type QueryEmployeesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<InputMaybe<OrderByInput>>>;
+  page?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<EmployeeWhereInput>;
 };
 
@@ -195,6 +210,8 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   OrderByInput: OrderByInput;
+  PaginatedEmployee: ResolverTypeWrapper<PaginatedEmployee>;
+  Pagination: ResolverTypeWrapper<Pagination>;
   Query: ResolverTypeWrapper<{}>;
   SalaryRange: SalaryRange;
   SortOrder: SortOrder;
@@ -213,6 +230,8 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']['output'];
   Mutation: {};
   OrderByInput: OrderByInput;
+  PaginatedEmployee: PaginatedEmployee;
+  Pagination: Pagination;
   Query: {};
   SalaryRange: SalaryRange;
   String: Scalars['String']['output'];
@@ -247,15 +266,30 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateEmployee?: Resolver<ResolversTypes['Employee'], ParentType, ContextType, RequireFields<MutationUpdateEmployeeArgs, 'id' | 'input'>>;
 };
 
+export type PaginatedEmployeeResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedEmployee'] = ResolversParentTypes['PaginatedEmployee']> = {
+  data?: Resolver<Array<ResolversTypes['Employee']>, ParentType, ContextType>;
+  pagination?: Resolver<ResolversTypes['Pagination'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Pagination'] = ResolversParentTypes['Pagination']> = {
+  limit?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPages?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   employee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<QueryEmployeeArgs, 'id'>>;
-  employees?: Resolver<Maybe<Array<ResolversTypes['Employee']>>, ParentType, ContextType, Partial<QueryEmployeesArgs>>;
+  employees?: Resolver<ResolversTypes['PaginatedEmployee'], ParentType, ContextType, Partial<QueryEmployeesArgs>>;
 };
 
 export type Resolvers<ContextType = any> = {
   Department?: DepartmentResolvers<ContextType>;
   Employee?: EmployeeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  PaginatedEmployee?: PaginatedEmployeeResolvers<ContextType>;
+  Pagination?: PaginationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };
 

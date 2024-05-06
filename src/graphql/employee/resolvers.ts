@@ -7,12 +7,24 @@ import {
   getEmployees,
   updateEmployee,
 } from './service'
+import { Pagination, paginationSchema } from '@schema/pagination'
 
 export const employeeResolvers: Resolvers = {
   Query: {
-    employees: async (_, { orderBy, where }, ___, info) => {
+    employees: async (_, { orderBy, where, limit, page }, ___, info) => {
+      let paginationParams: Pagination
+
       try {
-        return await getEmployees({ info, orderBy, where })
+        paginationParams = paginationSchema.parse({ limit, page })
+      } catch (error) {
+        console.error('Error parsing pagination:', error)
+        throw new GraphQLError('Invalid pagination parameters', {
+          extensions: { code: 'BAD_USER_INPUT' },
+        })
+      }
+
+      try {
+        return await getEmployees({ info, orderBy, where, ...paginationParams })
       } catch (error) {
         console.error('Failed to fetch employees:', error)
         throw new GraphQLError('Failed to fetch employees', {

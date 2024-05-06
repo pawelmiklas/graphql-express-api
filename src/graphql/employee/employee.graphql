@@ -29,6 +29,17 @@ type Department {
   updatedAt: String!
 }
 
+type Pagination {
+  limit: Int!
+  page: Int!
+  totalPages: Int!
+}
+
+type PaginatedEmployee {
+  data: [Employee!]!
+  pagination: Pagination!
+}
+
 input OrderByInput {
   field: SortableField!
   order: SortOrder!
@@ -56,7 +67,12 @@ input SalaryRange {
 }
 
 type Query {
-  employees(orderBy: [OrderByInput], where: EmployeeWhereInput): [Employee!]
+  employees(
+    orderBy: [OrderByInput]
+    where: EmployeeWhereInput
+    limit: Int
+    page: Int
+  ): PaginatedEmployee!
   employee(id: ID!): Employee
 }
 
