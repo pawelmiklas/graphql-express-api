@@ -2,6 +2,7 @@ import { db } from '@lib/prismaClient'
 import { ErrorCode, throwGraphQLError } from '@utils/graphqlError'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { jwtSchema } from '@schema/jwt'
 
 const JWT_SECRET = process.env.JWT_SECRET
 const JWT_EXPIRY = '1h'
@@ -12,10 +13,6 @@ const generateToken = (userId: string, jwtSecret: string) => {
 }
 
 export const register = async ({ email, password }: { email: string; password: string }) => {
-  if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET is not set')
-  }
-
   const isEmailInUse = await db.user.findFirst({
     where: { email },
   })
@@ -43,10 +40,6 @@ export const register = async ({ email, password }: { email: string; password: s
 }
 
 export const login = async ({ email, password }: { email: string; password: string }) => {
-  if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET is not set')
-  }
-
   const user = await db.user.findFirst({
     where: { email },
   })
@@ -79,13 +72,11 @@ export const getUserById = async (userId: string) => {
 }
 
 export const getUserFromToken = (token: string) => {
-  if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET is not set')
-  }
-
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string }
-    return decoded.userId
+    const decoded = jwt.verify(token, JWT_SECRET)
+    const { userId } = jwtSchema.parse(decoded)
+
+    return userId
   } catch (error) {
     console.error('Token verification failed:', error)
     return null

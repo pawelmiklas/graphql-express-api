@@ -7,6 +7,7 @@ import { employeeResolvers } from '@graphql/employee/resolvers'
 import { userResolvers } from '@graphql/user/resolvers'
 import { readFileSync } from 'fs'
 import { context } from '@graphql/context'
+import '@utils/parseEnv'
 
 const employeeTypes = readFileSync('./src/graphql/employee/employee.graphql', 'utf-8')
 const userTypes = readFileSync('./src/graphql/user/user.graphql', 'utf-8')

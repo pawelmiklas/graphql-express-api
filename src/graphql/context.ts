@@ -13,11 +13,11 @@ export const context: ExpressMiddlewareOptions<any>['context'] = async ({ req })
     return throwGraphQLError('User is not authenticated', ErrorCode.UNAUTHENTICATED)
   }
 
-  const user = getUserFromToken(token)
+  const userId = getUserFromToken(token)
 
-  if (!user) {
+  if (!userId) {
     return throwGraphQLError('User is not authenticated', ErrorCode.UNAUTHENTICATED)
   }
 
-  return { user }
+  return { userId }
 }

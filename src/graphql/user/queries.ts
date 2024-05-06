@@ -3,9 +3,9 @@ import { ErrorCode, throwGraphQLError } from '@utils/graphqlError'
 import { getUserById } from './service'
 
 export const userQueries: Resolvers['Query'] = {
-  me: async (_, __, { user }) => {
+  me: async (_, __, { userId }) => {
     try {
-      const currentUser = await getUserById(user)
+      const currentUser = await getUserById(userId)
 
       if (!currentUser) {
         return throwGraphQLError('User not found', ErrorCode.INTERNAL_SERVER_ERROR)
