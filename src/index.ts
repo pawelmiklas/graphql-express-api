@@ -40,6 +40,7 @@ const main = async () => {
     express.json(),
     expressMiddleware(server, { context })
   )
+
   app
     .listen(port, () => {
       console.log(`Server running at http://localhost:${port}`)

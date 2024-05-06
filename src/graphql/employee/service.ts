@@ -42,7 +42,7 @@ export const getEmployees = async ({
     .filter((element): element is Record<SortableField, SortOrder> => element !== null)
 
   const whereArgs: Prisma.EmployeeFindManyArgs['where'] = {
-    title: where?.title ? { contains: where.title } : undefined,
+    title: where?.title ? { contains: where.title, mode: 'insensitive' } : undefined,
     departmentId: where?.departmentId ? { equals: where.departmentId } : undefined,
     salary: {
       gte: where?.salary?.min ?? undefined,
