@@ -8,7 +8,9 @@
     "start": "node build/src/index.js",
     "build": "rm -rf build && tsc -p .",
     "lint": "eslint . --ext .ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prisma:db": "prisma db push",
+    "prisma:studio": "prisma studio"
   },
   "keywords": [],
   "author": "Paweł Mikłas",
