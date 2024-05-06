@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql'
-import { db } from '../../lib/prismaClient'
+import { db } from '@lib/prismaClient'
 import { Prisma } from '@prisma/client'
 import { PrismaSelect } from '@paljs/plugins'
 import {
@@ -8,7 +8,7 @@ import {
   ResolversTypes,
   SortOrder,
   SortableField,
-} from '../../generated/graphql'
+} from '@generated/graphql'
 
 export const getEmployees = async ({
   info,

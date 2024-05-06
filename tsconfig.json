@@ -10,6 +10,10 @@
     "module": "NodeNext",
     "strict": true,
     "outDir": "./build",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@generated/*": ["src/generated/*"],
+      "@lib/*": ["src/lib/*"]
+    }
   }
 }

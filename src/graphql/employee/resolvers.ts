@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { Resolvers } from '../../generated/graphql'
+import { Resolvers } from '@generated/graphql'
 import {
   createEmployee,
   deleteEmployee,
