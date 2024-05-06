@@ -1,7 +1,7 @@
 import { Resolvers } from '@generated/graphql'
 import { createEmployee, deleteEmployee, updateEmployee } from './service'
 import { throwGraphQLError, ErrorCode } from '@utils/graphqlError'
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
+import { PrismaClientValidationError } from '@prisma/client/runtime/library'
 
 export const employeeMutations: Resolvers['Mutation'] = {
   createEmployee: async (_, { input }, __, info) => {
@@ -10,7 +10,7 @@ export const employeeMutations: Resolvers['Mutation'] = {
     } catch (error) {
       console.error('Error creating employee:', error)
 
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof PrismaClientValidationError) {
         return throwGraphQLError(
           'Failed to create an employee. Please check your input and try again.',
           ErrorCode.BAD_USER_INPUT
@@ -26,7 +26,7 @@ export const employeeMutations: Resolvers['Mutation'] = {
     } catch (error) {
       console.error(`Error updating employee with ID ${id}:`, error)
 
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof PrismaClientValidationError) {
         return throwGraphQLError(
           'Failed to update employee. Please check your input and try again.',
           ErrorCode.BAD_USER_INPUT
