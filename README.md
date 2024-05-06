@@ -45,3 +45,12 @@ npm run test
 ```bash
 npm run prisma:studio
 ```
+
+## Building and running in production
+
+```bash
+npm run build
+npm start
+```
+
+open [http://localhost:4000/graphql](http://localhost:4000/graphql) in your browser
