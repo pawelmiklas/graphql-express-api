@@ -1,0 +1,67 @@
+type Employee {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  dateOfJoining: String!
+  dateOfBirth: String!
+  salary: Int!
+  title: String!
+  department: Department!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input EmployeeInput {
+  firstName: String!
+  lastName: String!
+  dateOfJoining: String!
+  dateOfBirth: String!
+  salary: Int!
+  title: String!
+  departmentId: ID!
+}
+
+type Department {
+  id: ID!
+  name: String!
+  employee: [Employee!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input OrderByInput {
+  field: SortableField!
+  order: SortOrder!
+}
+
+enum SortableField {
+  dateOfJoining
+  salary
+}
+
+enum SortOrder {
+  asc
+  desc
+}
+
+input EmployeeWhereInput {
+  title: String
+  departmentId: ID
+  salary: SalaryRange
+}
+
+input SalaryRange {
+  min: Int
+  max: Int
+}
+
+type Query {
+  employees(orderBy: [OrderByInput], where: EmployeeWhereInput): [Employee!]
+  employee(id: ID!): Employee
+}
+
+type Mutation {
+  createEmployee(input: EmployeeInput!): Employee!
+  updateEmployee(id: ID!, input: EmployeeInput!): Employee!
+  deleteEmployee(id: ID!): Employee!
+}
