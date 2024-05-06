@@ -28,9 +28,8 @@ const main = async () => {
 
   await server.start()
 
-  app.use(cors())
-  app.use(express.json())
-  app.use(expressMiddleware(server))
+  app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server))
+
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`)
   })
