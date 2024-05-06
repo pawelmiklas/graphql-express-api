@@ -16,6 +16,12 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type AuthResponse = {
+  __typename?: 'AuthResponse';
+  token: Scalars['String']['output'];
+  user: User;
+};
+
 export type Department = {
   __typename?: 'Department';
   createdAt: Scalars['String']['output'];
@@ -59,6 +65,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   createEmployee: Employee;
   deleteEmployee: Employee;
+  login: AuthResponse;
+  register: AuthResponse;
   updateEmployee: Employee;
 };
 
@@ -70,6 +78,18 @@ export type MutationCreateEmployeeArgs = {
 
 export type MutationDeleteEmployeeArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationLoginArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+
+export type MutationRegisterArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 
@@ -100,6 +120,7 @@ export type Query = {
   __typename?: 'Query';
   employee?: Maybe<Employee>;
   employees: PaginatedEmployee;
+  me: User;
 };
 
 
@@ -129,6 +150,12 @@ export enum SortableField {
   DateOfJoining = 'dateOfJoining',
   Salary = 'salary'
 }
+
+export type User = {
+  __typename?: 'User';
+  email: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+};
 
 
 
@@ -201,6 +228,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AuthResponse: ResolverTypeWrapper<AuthResponse>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Department: ResolverTypeWrapper<Department>;
   Employee: ResolverTypeWrapper<Employee>;
@@ -217,10 +245,12 @@ export type ResolversTypes = {
   SortOrder: SortOrder;
   SortableField: SortableField;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AuthResponse: AuthResponse;
   Boolean: Scalars['Boolean']['output'];
   Department: Department;
   Employee: Employee;
@@ -235,6 +265,13 @@ export type ResolversParentTypes = {
   Query: {};
   SalaryRange: SalaryRange;
   String: Scalars['String']['output'];
+  User: User;
+};
+
+export type AuthResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthResponse'] = ResolversParentTypes['AuthResponse']> = {
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type DepartmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Department'] = ResolversParentTypes['Department']> = {
@@ -263,6 +300,8 @@ export type EmployeeResolvers<ContextType = any, ParentType extends ResolversPar
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createEmployee?: Resolver<ResolversTypes['Employee'], ParentType, ContextType, RequireFields<MutationCreateEmployeeArgs, 'input'>>;
   deleteEmployee?: Resolver<ResolversTypes['Employee'], ParentType, ContextType, RequireFields<MutationDeleteEmployeeArgs, 'id'>>;
+  login?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
+  register?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'password'>>;
   updateEmployee?: Resolver<ResolversTypes['Employee'], ParentType, ContextType, RequireFields<MutationUpdateEmployeeArgs, 'id' | 'input'>>;
 };
 
@@ -282,14 +321,23 @@ export type PaginationResolvers<ContextType = any, ParentType extends ResolversP
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   employee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<QueryEmployeeArgs, 'id'>>;
   employees?: Resolver<ResolversTypes['PaginatedEmployee'], ParentType, ContextType, Partial<QueryEmployeesArgs>>;
+  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+};
+
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
+  AuthResponse?: AuthResponseResolvers<ContextType>;
   Department?: DepartmentResolvers<ContextType>;
   Employee?: EmployeeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaginatedEmployee?: PaginatedEmployeeResolvers<ContextType>;
   Pagination?: PaginationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 };
 

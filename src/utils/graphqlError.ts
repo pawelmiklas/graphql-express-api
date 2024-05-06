@@ -9,6 +9,7 @@ export enum ErrorCode {
   OPERATION_RESOLUTION_FAILURE = 'OPERATION_RESOLUTION_FAILURE',
   BAD_REQUEST = 'BAD_REQUEST',
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
+  UNAUTHENTICATED = 'UNAUTHENTICATED',
 }
 
 export const throwGraphQLError = (message: string, code: ErrorCode): never => {
