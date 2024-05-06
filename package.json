@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "prisma:db": "prisma db push",
     "prisma:studio": "prisma studio",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
   },
   "keywords": [],
   "author": "Paweł Mikłas",
