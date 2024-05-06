@@ -14,7 +14,8 @@
     "paths": {
       "@generated/*": ["src/generated/*"],
       "@lib/*": ["src/lib/*"],
-      "@schema/*": ["src/schema/*"]
+      "@schema/*": ["src/schema/*"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }

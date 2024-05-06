@@ -23,6 +23,7 @@ const main = async () => {
         ...employeeResolvers.Mutation,
       },
     },
+    includeStacktraceInErrorResponses: false,
   })
 
   await server.start()
