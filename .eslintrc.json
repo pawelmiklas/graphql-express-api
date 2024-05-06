@@ -1,0 +1,7 @@
+{
+  "extends": ["airbnb-base", "prettier", "plugin:node/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2022
+  },
+  "plugins": ["prettier"]
+}
