@@ -2,6 +2,7 @@ import { Resolvers } from '@generated/graphql'
 import { getEmployeeById, getEmployees } from './service'
 import { Pagination, paginationSchema } from '@schema/pagination'
 import { throwGraphQLError, ErrorCode } from '@utils/graphqlError'
+import { ZodError } from 'zod'
 
 export const employeeQueries: Resolvers['Query'] = {
   employees: async (_, { orderBy, where, limit, page }, ___, info) => {
@@ -10,8 +11,10 @@ export const employeeQueries: Resolvers['Query'] = {
     try {
       paginationParams = paginationSchema.parse({ limit, page })
     } catch (error) {
+      const message = (error as ZodError).errors[0].message
+
       console.error('Error parsing pagination:', error)
-      return throwGraphQLError('Invalid pagination parameters', ErrorCode.BAD_USER_INPUT)
+      return throwGraphQLError(message, ErrorCode.BAD_USER_INPUT)
     }
 
     try {
